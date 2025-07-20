@@ -7,6 +7,11 @@ touch  infra/environments/dev/{main.tf,variables.tf,outputs.tf,terraform.tfvars,
 touch  infra/environments/staging/.gitkeep
 touch  infra/environments/prod/.gitkeep
 
+# Infra modules placeholders
+for module in vpc eks rds s3 sqs elasticache iam network; do
+  touch infra/modules/$module/{main.tf,variables.tf,outputs.tf}
+done
+
 # Core project files
 touch  infra/README.md
 touch  scripts/{deploy.sh,destroy.sh}
