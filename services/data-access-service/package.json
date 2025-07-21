@@ -1,7 +1,7 @@
 {
-  "name": "frontend-service",
+  "name": "data-access-service",
   "version": "1.0.0",
-  "description": "Frontend service for stylestack-on-eks",
+  "description": "Data Access service for stylestack-on-eks",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
