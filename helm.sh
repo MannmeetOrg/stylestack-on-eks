@@ -3,7 +3,7 @@
 echo "🔧 Creating Helm chart directory structure..."
 
 # Define base path
-BASE_DIR="stylestack-on-eks/helm-charts/generic-service"
+BASE_DIR="helm-charts/generic-service"
 
 # Create directories
 mkdir -p $BASE_DIR/templates
@@ -77,4 +77,41 @@ kind: Service
 metadata:
   name: {{ include "generic-service.fullname" . }}
 spec:
-  type: {{ .
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+  selector:
+    app: {{ include "generic-service.name" . }}
+EOF
+
+# Create ingress.yaml
+cat <<EOF > $BASE_DIR/templates/ingress.yaml
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "generic-service.fullname" . }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            pathType: {{ .pathType }}
+            backend:
+              service:
+                name: {{ include "generic-service.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.port }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+EOF
+
+echo "✅ Helm chart structure created at helm-charts/generic-service/"
