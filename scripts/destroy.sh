@@ -1,2 +1,3 @@
 #!/bin/bash
-kubectl delete -f k8s-manifests/
+
+terraform destroy -auto-approve
