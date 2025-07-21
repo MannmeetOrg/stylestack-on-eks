@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+          image: {{ .Values.services.frontend.image }}:{{ .Values.services.frontend.tag }}
+          ports:
+            - containerPort: {{ .Values.services.frontend.port }}

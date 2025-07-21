@@ -1,0 +1,2 @@
+# services/api-gateway-service/requirements.txt
+flask==2.3.3

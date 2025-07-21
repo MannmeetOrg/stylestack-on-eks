@@ -1,8 +1,9 @@
+# infra/backend.tf
 terraform {
   backend "s3" {
-    bucket         = "stylestack-tf-state"
-    key            = "global/terraform.tfstate"
-    region         = "ap-south-1"
-    dynamodb_table = "stylestack-locks"
+    bucket         = "stylestack-terraform-state"
+    key            = "eks/terraform.tfstate"
+    region         = "us-west-2"
+    dynamodb_table = "terraform-locks"
   }
 }

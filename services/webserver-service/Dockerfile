@@ -1,3 +1,9 @@
-# Dockerfile for webserver-service
-FROM alpine
-CMD ["echo", "webserver-service running"]
+# services/webserver-service/Dockerfile
+FROM golang:1.21
+WORKDIR /app
+COPY go.mod .
+RUN go mod download
+COPY . .
+RUN go build -o main .
+EXPOSE 8080
+CMD ["./main"]

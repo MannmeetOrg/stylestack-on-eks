@@ -1,2 +1,7 @@
+# scripts/deploy.sh
 #!/bin/bash
-kubectl apply -f k8s-manifests/
+set -e
+
+# Deploy Helm chart
+helm upgrade --install stylestack helm-charts/stylestack \
+  --namespace stylestack --create-namespace

@@ -1,3 +1,8 @@
-# Dockerfile for frontend-service
-FROM alpine
-CMD ["echo", "frontend-service running"]
+# services/frontend-service/Dockerfile
+FROM node:18
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]

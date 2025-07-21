@@ -1,0 +1,2 @@
+# services/infra-manager-service/requirements.txt
+flask==2.3.3

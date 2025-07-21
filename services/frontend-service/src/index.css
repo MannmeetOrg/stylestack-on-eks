@@ -1,0 +1,9 @@
+# services/frontend-service/src/index.css
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+.app {
+  text-align: center;
+}

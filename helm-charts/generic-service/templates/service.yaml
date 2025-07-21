@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}-{{ .Values.services.frontend.name | default "frontend" }}
+  ports:
+      - protocol: TCP
+        port: 80
+        targetPort: {{ .Values.services.frontend.port }}
+  type: ClusterIP
