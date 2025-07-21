@@ -1,2 +1,0 @@
-# services/message-queue-service/requirements.txt
-flask==2.3.3

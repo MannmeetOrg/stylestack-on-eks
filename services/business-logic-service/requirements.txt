@@ -1,2 +1,0 @@
-# services/business-logic-service/requirements.txt
-flask==2.3.3
