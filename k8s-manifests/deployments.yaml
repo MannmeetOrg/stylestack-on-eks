@@ -1,0 +1,300 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-service
+  namespace: webapps
+  labels:
+    app: frontend-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-service
+  template:
+    metadata:
+      labels:
+        app: frontend-service
+    spec:
+      containers:
+        - name: frontend-service
+          image: mannmeetorg/frontend-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-service
+  namespace: webapps
+  labels:
+    app: webserver-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webserver-service
+  template:
+    metadata:
+      labels:
+        app: webserver-service
+    spec:
+      containers:
+        - name: webserver-service
+          image: mannmeetorg/webserver-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-service
+  namespace: webapps
+  labels:
+    app: app-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-service
+  template:
+    metadata:
+      labels:
+        app: app-service
+    spec:
+      containers:
+        - name: app-service
+          image: mannmeetorg/app-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-service
+  namespace: webapps
+  labels:
+    app: api-gateway-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway-service
+  template:
+    metadata:
+      labels:
+        app: api-gateway-service
+    spec:
+      containers:
+        - name: api-gateway-service
+          image: mannmeetorg/api-gateway-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-logic-service
+  namespace: webapps
+  labels:
+    app: business-logic-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: business-logic-service
+  template:
+    metadata:
+      labels:
+        app: business-logic-service
+    spec:
+      containers:
+        - name: business-logic-service
+          image: mannmeetorg/business-logic-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-queue-service
+  namespace: webapps
+  labels:
+    app: message-queue-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-queue-service
+  template:
+    metadata:
+      labels:
+        app: message-queue-service
+    spec:
+      containers:
+        - name: message-queue-service
+          image: mannmeetorg/message-queue-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-access-service
+  namespace: webapps
+  labels:
+    app: data-access-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-access-service
+  template:
+    metadata:
+      labels:
+        app: data-access-service
+    spec:
+      containers:
+        - name: data-access-service
+          image: mannmeetorg/data-access-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-service
+  namespace: webapps
+  labels:
+    app: cache-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-service
+  template:
+    metadata:
+      labels:
+        app: cache-service
+    spec:
+      containers:
+        - name: cache-service
+          image: mannmeetorg/cache-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-service
+  namespace: webapps
+  labels:
+    app: storage-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-service
+  template:
+    metadata:
+      labels:
+        app: storage-service
+    spec:
+      containers:
+        - name: storage-service
+          image: mannmeetorg/storage-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infra-manager-service
+  namespace: webapps
+  labels:
+    app: infra-manager-service
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-manager-service
+  template:
+    metadata:
+      labels:
+        app: infra-manager-service
+    spec:
+      containers:
+        - name: infra-manager-service
+          image: mannmeetorg/infra-manager-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: environment
