@@ -1,0 +1,7 @@
+# .gitignore
+node_modules/
+.env
+*.tfstate
+*.zip
+__pycache__/
+.DS_Store
