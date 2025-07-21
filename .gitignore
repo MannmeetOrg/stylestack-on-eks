@@ -1,22 +1,31 @@
-# .gitignore
-# Node.js
-node_modules/
-npm-debug.log
+Terraform
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
+*.tfstate *.tfstate.backup .terraform/ terraform.tfstate.d/
 
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.backup
-terraform.tfstate.lock.info
+Node.js
 
-# Docker
-*.log
+node_modules/ npm-debug.log yarn-error.log
+
+Jenkins
+
+*.log .jenkins/ secrets/
+
+Docker
+
+*.dockerignore docker-compose.yml
+
+Sensitive files
+
+*.pem *.key *.crt *.env credentials config.json
+
+IDEs and editors
+
+.vscode/ .idea/ *.sublime-project *.sublime-workspace
+
+OS files
+
+.DS_Store Thumbs.db
+
+Temporary files
+
+*.bak *.swp *~
