@@ -1,8 +1,12 @@
-# services/frontend-service/Dockerfile
-FROM node:18
+FROM node:20
+
 WORKDIR /app
+
 COPY package.json .
 RUN npm install
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
+
+COPY app.js .
+
+EXPOSE 8080
+
+CMD ["node", "app.js"]

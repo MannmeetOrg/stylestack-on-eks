@@ -1,9 +1,12 @@
-# services/webserver-service/Dockerfile
-FROM golang:1.21
+FROM node:20
+
 WORKDIR /app
-COPY go.mod .
-RUN go mod download
-COPY . .
-RUN go build -o main .
+
+COPY package.json .
+RUN npm install
+
+COPY app.js .
+
 EXPOSE 8080
-CMD ["./main"]
+
+CMD ["node", "app.js"]
