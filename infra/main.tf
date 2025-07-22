@@ -221,7 +221,7 @@ resource "aws_instance" "jenkins" {
 # EKS Cluster
 resource "aws_eks_cluster" "main" {
   name     = "my-eks2"
-  role_arn = aws_iam_role.ec2_role.arn
+  role_arn = aws_iam_role.eks_cluster_role.arn
   vpc_config {
     subnet_ids         = [aws_subnet.public_a.id, aws_subnet.public_b.id]
     security_group_ids = [aws_security_group.eks_sg.id]
@@ -235,7 +235,7 @@ resource "aws_eks_cluster" "main" {
 resource "aws_eks_node_group" "node2" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "node2"
-  node_role_arn   = aws_iam_role.ec2_role.arn
+  node_role_arn   = aws_iam_role.eks_cluster_role.arn
   subnet_ids      = [aws_subnet.public_a.id, aws_subnet.public_b.id]
   instance_types  = ["t3.medium"]
   scaling_config {
@@ -250,4 +250,26 @@ resource "aws_eks_node_group" "node2" {
   depends_on = [
     aws_iam_role_policy_attachment.eks_worker
   ]
+}
+
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "EKSClusterRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "eks.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = aws_iam_policy.eks_full_access.arn
 }
