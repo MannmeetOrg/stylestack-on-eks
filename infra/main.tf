@@ -2,6 +2,39 @@ provider "aws" {
   region = var.region
 }
 
+provider "kubernetes" {
+  host                   = aws_eks_cluster.main.endpoint
+  cluster_ca_certificate = base64decode(aws_eks_cluster.main.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = aws_eks_cluster.main.name
+}
+
+resource "kubernetes_config_map" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    mapRoles = yamlencode([
+      {
+        rolearn  = aws_iam_role.eks_node_role.arn
+        username = "system:node:{{EC2PrivateDNSName}}"
+        groups   = ["system:bootstrappers", "system:nodes"]
+      },
+      {
+        rolearn  = aws_iam_role.ec2_role.arn
+        username = "ec2-admin"
+        groups   = ["system:masters"]
+      }
+    ])
+  }
+  depends_on = [aws_eks_node_group.node2]
+}
+
 # VPC
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
