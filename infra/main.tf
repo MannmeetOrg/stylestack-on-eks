@@ -203,7 +203,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 
 # EC2 Instance
 resource "aws_instance" "jenkins" {
-  ami                             = "ami-0ad42f1f6603d3522" # Ubuntu Server 20.04 LTS in ap-south-1
+  ami                    = "ami-0f918f7e67a3323f0" # Ubuntu Server 20.04 LTS in ap-south-1
   instance_type          = "t3.large" # Approx 30GB EBS volume
   subnet_id              = aws_subnet.public_a.id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
