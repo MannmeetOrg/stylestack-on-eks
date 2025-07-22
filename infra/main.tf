@@ -232,11 +232,46 @@ resource "aws_eks_cluster" "main" {
   ]
 }
 
+# EKS Node Role
+resource "aws_iam_role" "eks_node_role" {
+  name = "EKSNodeGroupRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Attach AWS-managed policies to node role
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = aws_iam_role.eks_node_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.eks_node_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_container_registry_read_only" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.eks_node_role.name
+}
+
+
 # EKS Node Group
 resource "aws_eks_node_group" "node2" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "node2"
-  node_role_arn   = aws_iam_role.eks_cluster_role.arn
+  node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = [aws_subnet.public_a.id, aws_subnet.public_b.id]
   instance_types  = ["t3.medium"]
   scaling_config {
