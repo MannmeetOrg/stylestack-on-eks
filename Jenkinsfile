@@ -89,7 +89,7 @@ pipeline {
 
 def buildAndPush(String servicePath) {
     script {
-        def imageName = "mannmeetorg/${servicePath.tokenize('/')[-1]}:latest"
+        def imageName = "cloudmahir19/stylestack/${servicePath.tokenize('/')[-1]}:latest"
         withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
             dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
                 sh "docker build -t ${imageName} ."
