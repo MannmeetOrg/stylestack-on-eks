@@ -4,6 +4,21 @@
 apt-get update -y
 apt-get upgrade -y
 
+# AWS CLI Install
+sudo apt update
+sudo apt install -y unzip curl
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+aws configure
+
+# Input values (expected from environment variables like GitHub Secrets)
+AWS_ACCESS_KEY_ID= "${{ secrets.AWS_ACCESS_KEY_ID }}"
+AWS_SECRET_ACCESS_KEY= "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+AWS_REGION="ap-south-1"
+AWS_OUTPUT="json"
+
 # Install Jenkins
 sudo apt install -y openjdk-21-jdk
 java -version
