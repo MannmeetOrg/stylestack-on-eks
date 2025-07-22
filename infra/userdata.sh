@@ -5,7 +5,8 @@ apt-get update -y
 apt-get upgrade -y
 
 # Install Jenkins
-apt-get install -y openjdk-11-jdk
+sudo apt install -y openjdk-21-jdk
+java -version
 wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | apt-key add -
 echo "deb https://pkg.jenkins.io/debian-stable binary/" | tee /etc/apt/sources.list.d/jenkins.list
 apt-get update -y
