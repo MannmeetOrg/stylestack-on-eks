@@ -96,27 +96,6 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
-# Security Group for EKS Cluster
-resource "aws_security_group" "eks_sg" {
-  vpc_id = aws_vpc.main.id
-  name   = "eks-security-group"
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    Name = "eks-sg"
-  }
-}
-
 # IAM Role for EC2
 resource "aws_iam_role" "ec2_role" {
   name = "EKSFullAccessRole"
@@ -129,41 +108,6 @@ resource "aws_iam_role" "ec2_role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      }
-    ]
-  })
-}
-
-# IAM Policy for EKS Full Access
-resource "aws_iam_policy" "eks_full_access" {
-  name        = "EKSFullAccessPolicy"
-  description = "Policy for EKS and EC2 full access"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "ec2:*",
-          "eks:*",
-          "iam:PassRole",
-          "iam:GetRole",
-          "iam:ListRoles",
-          "iam:ListAttachedRolePolicies"
-        ]
-        Resource = "*"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:CreateCluster",
-          "eks:DeleteCluster",
-          "eks:UpdateClusterConfig",
-          "eks:UpdateClusterVersion"
-        ]
-        Resource = "*"
       }
     ]
   })
@@ -215,6 +159,63 @@ resource "aws_instance" "jenkins" {
   }
   tags = {
     Name = "Jenkins-EC2"
+  }
+}
+
+
+# IAM Policy for EKS Full Access
+resource "aws_iam_policy" "eks_full_access" {
+  name        = "EKSFullAccessPolicy"
+  description = "Policy for EKS and EC2 full access"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:*",
+          "eks:*",
+          "iam:PassRole",
+          "iam:GetRole",
+          "iam:ListRoles",
+          "iam:ListAttachedRolePolicies"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "eks:DescribeCluster",
+          "eks:ListClusters",
+          "eks:CreateCluster",
+          "eks:DeleteCluster",
+          "eks:UpdateClusterConfig",
+          "eks:UpdateClusterVersion"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Security Group for EKS Cluster
+resource "aws_security_group" "eks_sg" {
+  vpc_id = aws_vpc.main.id
+  name   = "eks-security-group"
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "eks-sg"
   }
 }
 
