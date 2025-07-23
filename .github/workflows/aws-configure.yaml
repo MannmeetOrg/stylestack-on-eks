@@ -15,8 +15,16 @@ jobs:
         run: |
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
-          sudo ./aws/install
+          sudo ./aws/install --update
           aws --version
+
+      - name: Terraform install
+        run: | 
+          sudo apt-get update && sudo apt-get install -y unzip
+          sudo dnf install -y dnf-plugins-core
+          sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+          sudo dnf install -y terraform
+          terraform -v
 
       - name: Make deploy.sh executable
         run: chmod +x ./deploy.sh
