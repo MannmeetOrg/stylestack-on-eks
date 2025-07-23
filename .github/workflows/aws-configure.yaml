@@ -1,7 +1,7 @@
 name: Configure AWS CLI
 
 on:
-  workflow_dispatch:  # You can also use `push` or `pull_request`
+  workflow_dispatch:  # You can also use `push`, `pull_request`, etc.
 
 jobs:
   configure-aws:
@@ -18,23 +18,11 @@ jobs:
           sudo ./aws/install
           aws --version
 
-      - name: Configure AWS CLI using GitHub Secrets
-        run: |
-          mkdir -p ~/.aws
+      - name: Make deploy.sh executable
+        run: chmod +x ./deploy.sh
 
-          cat > ~/.aws/credentials <<EOL
-          [default]
-          aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-          aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
-          EOL
-
-          cat > ~/.aws/config <<EOL
-          [default]
-          region = ap-south-1
-          output = json
-          EOL
-
-          echo "✅ AWS CLI configured successfully."
+      - name: Run deploy.sh to configure AWS CLI using GitHub Secrets
+        run: ./deploy.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
