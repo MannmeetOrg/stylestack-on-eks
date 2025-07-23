@@ -51,6 +51,7 @@ chmod +x /usr/local/bin/eksctl
 
 # Create Kubernetes namespace
 kubectl create namespace webapps
+kubectl get namespaces
 
 # Create Kubernetes YAML files
 cat <<EOF > /home/ubuntu/sa.yaml
