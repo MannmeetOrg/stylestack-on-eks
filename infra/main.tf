@@ -30,6 +30,10 @@ resource "kubernetes_config_map" "aws_auth" {
         username = "ec2-admin"
         groups   = ["system:masters"]
       }
+
+      lifecycle {
+        ignore_changes = [data]
+      }
     ])
   }
   depends_on = [
