@@ -22,3 +22,8 @@ variable "key_pair_name" {
   description = "Name of the SSH key pair"
   default     = "10-tier-key"
 }
+
+variable "manage_aws_auth" {
+  type    = bool
+  default = false
+}
