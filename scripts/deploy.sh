@@ -3,8 +3,6 @@
 
 # Terraform Infrastructure Creation
 cd infra/
-aws eks update-kubeconfig --name my-eks2 --region ap-south-1
-
 terraform init
 terraform apply -auto-approve
 
