@@ -38,7 +38,7 @@ newgrp docker
 
 # Install SonarQube
 # Variables
-SONARQUBE_VERSION=10.5.0.82913
+SONARQUBE_VERSION=10.5.1.90531
 SONARQUBE_ZIP="sonarqube-${SONARQUBE_VERSION}.zip"
 SONARQUBE_DIR="/opt/sonarqube"
 SONAR_USER="sonarqube"
