@@ -37,7 +37,68 @@ usermod -aG docker ubuntu
 newgrp docker
 
 # Install SonarQube
-docker run -d -p 9000:9000 sonarqube:lts-community
+# Variables
+SONARQUBE_VERSION=10.5.0.82913
+SONARQUBE_ZIP="sonarqube-${SONARQUBE_VERSION}.zip"
+SONARQUBE_DIR="/opt/sonarqube"
+SONAR_USER="sonarqube"
+JAVA_17_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+
+# 1. Update and install dependencies
+apt install -y openjdk-17-jdk wget unzip gnupg2 curl postgresql postgresql-contrib
+
+# 2. Create SonarQube user
+useradd -m -d $SONARQUBE_DIR -r -s /bin/bash $SONAR_USER
+
+# 3. Install SonarQube
+cd /opt
+wget https://binaries.sonarsource.com/Distribution/sonarqube/${SONARQUBE_ZIP}
+unzip $SONARQUBE_ZIP
+mv sonarqube-${SONARQUBE_VERSION} sonarqube
+chown -R $SONAR_USER:$SONAR_USER $SONARQUBE_DIR
+rm -f $SONARQUBE_ZIP
+
+# 4. Configure PostgreSQL for SonarQube
+sudo -u postgres psql -c "CREATE USER sonar WITH PASSWORD 'sonar';"
+sudo -u postgres psql -c "CREATE DATABASE sonarqube OWNER sonar;"
+sudo -u postgres psql -c "ALTER USER sonar WITH SUPERUSER;"
+
+# 5. Update SonarQube DB configuration
+cat >> $SONARQUBE_DIR/conf/sonar.properties <<EOF
+sonar.jdbc.username=sonar
+sonar.jdbc.password=sonar
+sonar.jdbc.url=jdbc:postgresql://localhost/sonarqube
+EOF
+
+# 6. Setup systemd service for SonarQube
+cat > /etc/systemd/system/sonarqube.service <<EOF
+[Unit]
+Description=SonarQube service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=$SONARQUBE_DIR/bin/linux-x86-64/sonar.sh start
+ExecStop=$SONARQUBE_DIR/bin/linux-x86-64/sonar.sh stop
+User=$SONAR_USER
+Group=$SONAR_USER
+Restart=always
+LimitNOFILE=65536
+LimitNPROC=4096
+Environment="JAVA_HOME=$JAVA_17_HOME"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# 7. Enable and start SonarQube
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable sonarqube
+systemctl start sonarqube
+
+echo "✅ SonarQube installation completed. Access via http://<your-ip>:9000"
+
 
 # Install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
