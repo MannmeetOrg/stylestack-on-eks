@@ -259,7 +259,7 @@ resource "aws_security_group" "eks_sg" {
 }
 
 # EKS Cluster
-resource "aws_eks_cluster" "main" {
+resource "aws_eks_cluster" "main" { # this creation of control plane
   name     = "my-eks2"
   role_arn = aws_iam_role.eks_cluster_role.arn
   vpc_config {
