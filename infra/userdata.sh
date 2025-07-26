@@ -13,11 +13,17 @@ sudo ./aws/install
 aws --version
 aws configure
 
-# Input values (expected from environment variables like GitHub Secrets)
-AWS_ACCESS_KEY_ID= "${{ secrets.AWS_ACCESS_KEY_ID }}"
-AWS_SECRET_ACCESS_KEY= "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-AWS_REGION="ap-south-1"
-AWS_OUTPUT="json"
+# Optional: Configure AWS CLI using IAM Role (or export keys)
+#---------------------------------------------------------
+echo "[INFO] Verifying IAM role credentials (recommended way)..."
+aws sts get-caller-identity || {
+  echo "[WARNING] IAM role not attached. You can configure AWS CLI manually."
+   Uncomment the next lines if you want to hardcode credentials (NOT RECOMMENDED)
+   export AWS_ACCESS_KEY_ID= ${{ secrets.AWS_ACCESS_KEY_ID }}
+   export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+   export AWS_DEFAULT_REGION="ap-south-1"
+   export AWS_DEFAULT_OUTPUT="json"
+}
 
 # Install Jenkins
 sudo apt install -y openjdk-21-jdk
