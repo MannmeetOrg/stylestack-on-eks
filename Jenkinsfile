@@ -34,75 +34,76 @@ pipeline {
                 stage('frontend-service') {
                     steps {
                         script {
-                            buildAndPush('frontend-service')
+                            buildAndPush('services/frontend-service')
                         }
                     }
                 }
                 stage('webserver-service') {
                     steps {
                         script {
-                            buildAndPush('webserver-service')
+                            buildAndPush('services/webserver-service')
                         }
                     }
                 }
                 stage('app-service') {
                     steps {
                         script {
-                            buildAndPush('app-service')
+                            buildAndPush('services/app-service')
                         }
                     }
                 }
                 stage('api-gateway-service') {
                     steps {
                         script {
-                            buildAndPush('api-gateway-service')
+                            buildAndPush('services/api-gateway-service')
                         }
                     }
                 }
                 stage('business-logic-service') {
                     steps {
                         script {
-                            buildAndPush('business-logic-service')
+                            buildAndPush('services/business-logic-service')
                         }
                     }
                 }
                 stage('message-queue-service') {
                     steps {
                         script {
-                            buildAndPush('message-queue-service')
+                            buildAndPush('services/message-queue-service')
                         }
                     }
                 }
                 stage('data-access-service') {
                     steps {
                         script {
-                            buildAndPush('data-access-service')
+                            buildAndPush('services/data-access-service')
                         }
                     }
                 }
                 stage('cache-service') {
                     steps {
                         script {
-                            buildAndPush('cache-service')
+                            buildAndPush('services/cache-service')
                         }
                     }
                 }
                 stage('storage-service') {
                     steps {
                         script {
-                            buildAndPush('storage-service')
+                            buildAndPush('services/storage-service')
                         }
                     }
                 }
                 stage('infra-manager-service') {
                     steps {
                         script {
-                            buildAndPush('infra-manager-service')
+                            buildAndPush('services/infra-manager-service')
                         }
                     }
                 }
             }
         }
+
         stage('K8s Deploy') {
             steps {
                 withKubeConfig(
