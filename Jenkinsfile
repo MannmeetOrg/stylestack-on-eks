@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+      dockerTool 'docker' // Make sure Docker tool is configured in Jenkins
+    }
+
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
@@ -146,7 +150,7 @@ def buildAndPush(String servicePath) {
         def serviceName = servicePath.tokenize('/')[-1]
         def imageName = "cloudmahir19/stylestack/${serviceName}:latest"
 
-        withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
+        withDockerRegistry(credentialsId: 'docker-cred', toolname: 'docker' {
             dir("/var/lib/jenkins/workspace/10-Tier/services/${servicePath}") {
                 sh """
                     echo "Building image: ${imageName}"
