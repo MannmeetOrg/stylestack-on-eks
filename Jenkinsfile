@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
+        DOCKER_HUB_REPO = 'cloudmahir19/stylestack'
     }
 
     stages {
@@ -26,38 +28,77 @@ pipeline {
         stage('Build & Push Docker Images') {
             parallel {
                 stage('frontend-service') {
-                    steps { buildAndPush('frontend-service') }
+                    steps {
+                        script {
+                            buildAndPush('frontend-service')
+                        }
+                    }
                 }
                 stage('webserver-service') {
-                    steps { buildAndPush('webserver-service') }
+                    steps {
+                        script {
+                            buildAndPush('webserver-service')
+                        }
+                    }
                 }
                 stage('app-service') {
-                    steps { buildAndPush('app-service') }
+                    steps {
+                        script {
+                            buildAndPush('app-service')
+                        }
+                    }
                 }
                 stage('api-gateway-service') {
-                    steps { buildAndPush('api-gateway-service') }
+                    steps {
+                        script {
+                            buildAndPush('api-gateway-service')
+                        }
+                    }
                 }
                 stage('business-logic-service') {
-                    steps { buildAndPush('business-logic-service') }
+                    steps {
+                        script {
+                            buildAndPush('business-logic-service')
+                        }
+                    }
                 }
                 stage('message-queue-service') {
-                    steps { buildAndPush('message-queue-service') }
+                    steps {
+                        script {
+                            buildAndPush('message-queue-service')
+                        }
+                    }
                 }
                 stage('data-access-service') {
-                    steps { buildAndPush('data-access-service') }
+                    steps {
+                        script {
+                            buildAndPush('data-access-service')
+                        }
+                    }
                 }
                 stage('cache-service') {
-                    steps { buildAndPush('cache-service') }
+                    steps {
+                        script {
+                            buildAndPush('cache-service')
+                        }
+                    }
                 }
                 stage('storage-service') {
-                    steps { buildAndPush('storage-service') }
+                    steps {
+                        script {
+                            buildAndPush('storage-service')
+                        }
+                    }
                 }
                 stage('infra-manager-service') {
-                    steps { buildAndPush('infra-manager-service') }
+                    steps {
+                        script {
+                            buildAndPush('infra-manager-service')
+                        }
+                    }
                 }
             }
         }
-
         stage('K8s Deploy') {
             steps {
                 withKubeConfig(
