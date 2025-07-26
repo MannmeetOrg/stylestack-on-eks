@@ -128,14 +128,32 @@ pipeline {
     }
 }
 
+// def buildAndPush(String servicePath) {
+//     script {
+//         def imageName = "cloudmahir19/stylestack/${servicePath.tokenize('/')[-1]}:latest"
+//         withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
+//             dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
+//                 sh "docker build -t ${imageName} ."
+//                 sh "docker push ${imageName}"
+//                 sh "docker rmi ${imageName}"
+//             }
+//         }
+//     }
+// }
+
 def buildAndPush(String servicePath) {
     script {
-        def imageName = "cloudmahir19/stylestack/${servicePath.tokenize('/')[-1]}:latest"
-        withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+        def serviceName = servicePath.tokenize('/')[-1]
+        def imageName = "cloudmahir19/stylestack/${serviceName}:latest"
+
+        withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
             dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
-                sh "docker build -t ${imageName} ."
-                sh "docker push ${imageName}"
-                sh "docker rmi ${imageName}"
+                sh """
+                    echo "Building image: ${imageName}"
+                    docker build -t ${imageName} .
+                    docker push ${imageName}
+                    docker rmi ${imageName}
+                """
             }
         }
     }
