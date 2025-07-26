@@ -147,7 +147,7 @@ def buildAndPush(String servicePath) {
         def imageName = "cloudmahir19/stylestack/${serviceName}:latest"
 
         withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
-            dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
+            dir("/var/lib/jenkins/workspace/10-Tier/services/${servicePath}") {
                 sh """
                     echo "Building image: ${imageName}"
                     docker build -t ${imageName} .
