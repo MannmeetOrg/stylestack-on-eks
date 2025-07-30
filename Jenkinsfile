@@ -1,13 +1,13 @@
 pipeline {
     agent any
 
-//     tools {
-//       dockerTool 'docker' // Make sure Docker tool is configured in Jenkins
-//     }
+     tools {
+       dockerTool 'docker' // Make sure Docker tool is configured in Jenkins
+     }
 
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
-        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-cred'
         DOCKER_HUB_REPO = 'cloudmahir19/stylestack'
     }
 
@@ -133,33 +133,37 @@ pipeline {
     }
 }
 
+// instead of buildAndPush('services/my‑svc'), just pass the service name:
+def buildAndPush(String serviceName) {
+  script {
+    def image = "cloudmahir19/stylestack/${serviceName}:latest"
+    echo "🔧 Building ${image}…"
+    // cd directly into services/<name>, not services/services/<name>
+    dir("services/${serviceName}") {
+      sh """
+        docker build -t ${image} .
+        docker push ${image}
+        docker rmi ${image} || true
+      """
+    }
+  }
+}
+
+
 // def buildAndPush(String servicePath) {
 //     script {
-//         def imageName = "cloudmahir19/stylestack/${servicePath.tokenize('/')[-1]}:latest"
-//         withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
-//             dir("/var/lib/jenkins/workspace/10-Tier/src/${servicePath}") {
-//                 sh "docker build -t ${imageName} ."
-//                 sh "docker push ${imageName}"
-//                 sh "docker rmi ${imageName}"
+//         def serviceName = servicePath.tokenize('/')[-1]
+//         def imageName = "cloudmahir19/stylestack/${serviceName}:latest"
+//
+//         withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+//             dir("/var/lib/jenkins/workspace/10-Tier/services/${servicePath}") {
+//                 sh """
+//                     echo "Building image: ${imageName}"
+//                     docker build -t ${imageName} .
+//                     docker push ${imageName}
+//                     docker rmi ${imageName}
+//                 """
 //             }
 //         }
 //     }
 // }
-
-def buildAndPush(String servicePath) {
-    script {
-        def serviceName = servicePath.tokenize('/')[-1]
-        def imageName = "cloudmahir19/stylestack/${serviceName}:latest"
-
-        withDockerRegistry(credentialsId: 'docker-cred', url: 'https://index.docker.io/v1/') {
-            dir("/var/lib/jenkins/workspace/10-Tier/services/${servicePath}") {
-                sh """
-                    echo "Building image: ${imageName}"
-                    docker build -t ${imageName} .
-                    docker push ${imageName}
-                    docker rmi ${imageName}
-                """
-            }
-        }
-    }
-}
