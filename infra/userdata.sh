@@ -3,6 +3,8 @@
 # Update system
 apt-get update -y
 apt-get upgrade -y
+sudo hostnamectl set-hostname jenkinssonar
+
 
 # AWS CLI Install
 sudo apt update
@@ -105,6 +107,8 @@ systemctl start sonarqube
 
 echo "✅ SonarQube installation completed. Access via http://<your-ip>:9000"
 
+  # START SONARQUBE SERVER
+  docker run -d -p 9000:9000 sonarqube:lts-community
 
 # Install kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -207,11 +211,19 @@ metadata:
     app: jenkins
 EOF
 
-# Apply Kubernetes configurations
-kubectl apply -f /home/ubuntu/sa.yaml
-kubectl apply -f /home/ubuntu/rol.yaml
-kubectl apply -f /home/ubuntu/bind.yaml
-kubectl apply -f /home/ubuntu/sec.yaml
+cat <<EOF > /home/ubuntu/aws-auth-patch.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::959620655822:role/EKSFullAccessRole
+      username: jenkins
+      groups:
+        - system:masters
+EOF
 
 # Install Jenkins plugins
 JENKINS_HOME=/var/lib/jenkins
@@ -251,3 +263,4 @@ eksctl create nodegroup --cluster=my-eks2 \
   --full-ecr-access \
   --appmesh-access \
   --alb-ingress-access
+

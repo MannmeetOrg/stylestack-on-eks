@@ -53,7 +53,7 @@ project-root/
 
 - AWS account with credentials configured (`aws configure`).
 - Terraform installed locally.
-- Docker Hub account (`mannmeetorg`) with write access.
+- Docker Hub account (`youraccountname`) with write access.
 - SSH key pair named `10-tier-key` in `ap-south-1`.
 - S3 bucket `10-tier-terraform-state` for Terraform state.
 - Git repository: `https://github.com/MannmeetOrg/stylestack-on-eks.git`.
